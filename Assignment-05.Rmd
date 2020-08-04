@@ -27,11 +27,14 @@ CountryDeathTibble<-read_tsv("./raw_data/Countries-Deaths.tsv") %>%
 filter(CNTRYNAME=="France"| CNTRYNAME=="Italy"| CNTRYNAME=="Germany") %>% pivot_longer(-CNTRYNAME, names_to="Date", values_to="Total_Deaths") %>% mutate(Date=mdy(paste(Date,"2020", sep = ""))) %>% rename(Country=CNTRYNAME)
 ```
 ```{r}
-write_csv(CountryDeathTibble, destfile="./output/GFI_total_deaths_by_date.csv")
+write_csv(CountryDeathTibble,"./output/GFI_total_deaths_by_date.csv")
 ```
 
 
 <!-- (4) Write a chunk that creates a tidy dataset called output/GFI_total_deaths_by_date.csv. This file should have variables named Country, Date, and Total_Deaths. You will need to use several tidy tools to restructure the data with pivot_long() and convert the four-digit codes to dates using lubridate. Filter the data so that only information from Germany, France, and Italy are present. This chuck should not display anything in the final html document. --> 
+```{r}
+read_csv("./output/GFI_total_deaths_by_date.csv") %>% group_by(Country) %>% mutate("Daily_Deaths"="Total_Deaths" - lag("Total_Deaths",n=1,default = NA))
+```
 
 
 <!-- (5) Write another chunk that reates a tidy dataset called output/GFI_daily_deaths_by_date.csv. This file should have variables named Country, Date, and Daily_Deaths. You can start from the previous data and use the lag() function to calculate the daily death rates as a difference between adjacent datapoints. Once again, this should not show up in the final html. --> 
