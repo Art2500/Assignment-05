@@ -14,16 +14,20 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(kableExtra)
 library(HelpersMG)
+library(tidyr)
+library(dplyr)
+library(lubridate)
 ```
 
 
 <!-- (3) Write a chunk that uses wget to download the data file from the Harvard Dataverse and save is as raw_data/Countries-Deaths.tsv. This chunk should also not show up in any way in the final html and should be cached so that you do not repeatedly download the file as you reexecute your code. --> 
 ```{r load_data,cache=TRUE,echo=FALSE}
 wget ("https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/L20LOT/FZLQRQ", destfile ="./raw_data/Countries-Deaths.tsv")
-CountryDeathTibble<-read_tsv("./raw_data/Countries-Deaths.tsv")
-rename(CountryDeathTibble, new_name==Country, Newname==Date, NewName==Total_Deaths)
-filter(CountryDeathTibble, CNTRYNAME==France| CNTRYNAME==Germany| CNTRYNAME==Italy)
-
+CountryDeathTibble<-read_tsv("./raw_data/Countries-Deaths.tsv") %>% 
+filter(CNTRYNAME=="France"| CNTRYNAME=="Italy"| CNTRYNAME=="Germany") %>% pivot_longer(-CNTRYNAME, names_to="Date", values_to="Total_Deaths") %>% mutate(Date=mdy(paste(Date,"2020", sep = ""))) %>% rename(Country=CNTRYNAME)
+```
+```{r}
+write_csv(CountryDeathTibble, destfile="./output/GFI_total_deaths_by_date.csv")
 ```
 
 
