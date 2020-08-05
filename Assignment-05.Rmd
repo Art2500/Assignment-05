@@ -33,14 +33,22 @@ write_csv(CountryDeathTibble,"./output/GFI_total_deaths_by_date.csv")
 
 <!-- (4) Write a chunk that creates a tidy dataset called output/GFI_total_deaths_by_date.csv. This file should have variables named Country, Date, and Total_Deaths. You will need to use several tidy tools to restructure the data with pivot_long() and convert the four-digit codes to dates using lubridate. Filter the data so that only information from Germany, France, and Italy are present. This chuck should not display anything in the final html document. --> 
 ```{r}
-read_csv("./output/GFI_total_deaths_by_date.csv") %>% group_by(Country) %>% mutate("Daily_Deaths"="Total_Deaths" - lag("Total_Deaths",n=1,default = NA))
+read_csv("./output/GFI_total_deaths_by_date.csv") %>% group_by(Country,Date) %>% mutate(Daily_Deaths=Total_Deaths - lag(Total_Deaths,n=1,default = NA)) %>% select(Total_Deaths) %>% write_csv("./output/GFI_daily_deaths_by_date.csv")
 ```
 
 
 <!-- (5) Write another chunk that reates a tidy dataset called output/GFI_daily_deaths_by_date.csv. This file should have variables named Country, Date, and Daily_Deaths. You can start from the previous data and use the lag() function to calculate the daily death rates as a difference between adjacent datapoints. Once again, this should not show up in the final html. --> 
+```{r}
+TotalDeaths<-read_csv("./output/GFI_total_deaths_by_date.csv")
+ggplot(TotalDeaths, aes(x=Date, y=Total_Deaths, color=Country)) + geom_line(size=1.5) + scale_y_log10() + theme_linedraw() + labs(y="Total COVID-19 Deaths")
+```
 
 
 <!-- (6) Write a chunk that uses ggplot2 to create a line graph that comparing the total deaths between the three countries over time. Color each line by country and use a line size of 1.5. Set the Y axis to be a log10 scale, and label that axis as Total COVID-19 Deaths. Please use the ggplot2 linedraw theme for your plot. --> 
+```{r}
+DailyDeathTime<-read_csv("./output/GFI_daily_deaths_by_date.csv")
+ggplot(DailyDeathTime, aes(x=Date, y=Total_Deaths, color=Country)) + geom_line(size=1.5) + scale_y_log10() +theme_linedraw() + labs(y="Daily COVID-19 Deaths")
+```
 
 
 <!-- (7) Write a chunk that uses ggplot2 to create a line graph that comparing the daily deaths between the three countries over time. Color each line by country and use a line size of 1.5. Label the y axis as Daily COVID-19 Deaths and set the y-axis limits to range from 0 to 1,000. Please use the ggplot2 linedraw theme for your plot. --> 
