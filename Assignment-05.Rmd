@@ -39,14 +39,14 @@ read_csv("./output/GFI_total_deaths_by_date.csv") %>% group_by(Country) %>% muta
 Deaths from COVID-19 have obviously risen as the year has gone by. This paper will show data from three countries: Germany, France, and Italy. It will show the Total deaths over time and the daily deaths for these 3 countries.
 
 <!-- (5) Write another chunk that reates a tidy dataset called output/GFI_daily_deaths_by_date.csv. This file should have variables named Country, Date, and Daily_Deaths. You can start from the previous data and use the lag() function to calculate the daily death rates as a difference between adjacent datapoints. Once again, this should not show up in the final html. --> 
-```{r,message=FALSE,echo=FALSE,warning=FALSE}
+```{r,message=FALSE,echo=FALSE,warning=FALSE,fig.align='center'}
 TotalDeaths<-read_csv("./output/GFI_total_deaths_by_date.csv")
 ggplot(TotalDeaths, aes(x=Date, y=Total_Deaths, color=Country)) + geom_line(size=1.5) + scale_y_log10() + theme_linedraw() + labs(y="Total COVID-19 Deaths")
 ```
 
 
 <!-- (6) Write a chunk that uses ggplot2 to create a line graph that comparing the total deaths between the three countries over time. Color each line by country and use a line size of 1.5. Set the Y axis to be a log10 scale, and label that axis as Total COVID-19 Deaths. Please use the ggplot2 linedraw theme for your plot. --> 
-```{r,message=FALSE,echo=FALSE,warning=FALSE}
+```{r,message=FALSE,echo=FALSE,warning=FALSE,fig.align='center'}
 Daily_info<-read_csv("./output/GFI_daily_deaths_by_date.csv")
 ggplot(Daily_info, aes(x=Date, y=Daily_Deaths, color=Country)) + geom_line(size=1.5) + scale_y_log10() + theme_linedraw() + labs(y="Daily COVID-19 Deaths")
 
